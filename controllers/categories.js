@@ -36,7 +36,7 @@ module.exports={
         } catch (error) {
             errorResponse(res,500,{
                 ...req.body,
-                id: req.params.id,
+                _id: req.params.id,
                 error: error.message
             })
         }
@@ -44,11 +44,11 @@ module.exports={
     putUpdate: async(req,res)=>{
         try {
             const category=await Category.findOneAndReplace({_id:req.params.id}, req.body);
-            successResponse(res,'Category updated', category);
+            successResponse(res,'Category replaced', category);
         } catch (error) {
             errorResponse(res,500,{
                 ...req.body,
-                id: req.params.id,
+                _id: req.params.id,
                 error: error.message
             })
         }

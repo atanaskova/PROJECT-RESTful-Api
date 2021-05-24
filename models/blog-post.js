@@ -1,7 +1,7 @@
 var mongoose=require("mongoose");
 
 var blogPostSchema=mongoose.Schema({
-    title: {
+    title:{
             type: String,
             required:['Please provide the title of the blog post']
     },
@@ -13,9 +13,17 @@ var blogPostSchema=mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Category'
         },
-    author:{
+    user:{
         type: mongoose.Types.ObjectId,
         ref:'User'
+    },
+    likes:{
+        type: Array,
+        default: []
+    },
+    city:{
+        type: mongoose.Types.ObjectId,
+        ref: 'City'
     }
 });
 

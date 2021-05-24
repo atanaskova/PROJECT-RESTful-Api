@@ -9,5 +9,7 @@ router
     .patch('/:id', controller.patchUpdate)
     .put('/:id', controller.putUpdate)
     .delete('/:id', controller.delete)
+    .put('/like/:id',controller.like)
+    .put('/dislike/:id',controller.dislike)
 
 module.exports=router;

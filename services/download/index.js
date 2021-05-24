@@ -1,15 +1,15 @@
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose");
-const uploadRouter=require('./routers/upload');
-const jwt=require('express-jwt');
+const downloadRouter=require('../download/routers/download');
+const jwt=require("express-jwt");
 const errorResponse=require('../../lib/error-response-sender');
 
 app.use(express.json());
 
 mongoose.connect("mongodb://localhost/ws-gen-11-project",{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useNewUrlParser:true,
+    useUnifiedTopology:true,
 });
 
 app.use(jwt({
@@ -24,14 +24,14 @@ app.use((err,req,res,next)=>{
     }
 })
 
-app.use('/upload',uploadRouter);
+app.use('/download',downloadRouter);
 
-app.listen("3001",(error)=>{
+app.listen("3003",(error)=>{
     if(error){
         return console.log(
-            "Error happend while starting the app on port 3001:",
+            'Error happened while starting the app on port 3003!',
             error
-            );
+        );
     }
-    console.log("Upload service successfully started on port 3001!");
+    console.log("Download service successfully started on port 3003!");
 });

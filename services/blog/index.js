@@ -3,15 +3,11 @@ const app=express();
 const mongoose=require("mongoose");
 const blogPostsRouter=require('./routers/blogposts');
 const categoriesRouter=require('./routers/categories');
+const citiesRouter=require('./routers/cities');
 const jwt=require('express-jwt');
 const errorResponse=require('../../lib/error-response-sender');
-var cron=require('node-cron');
 
 app.use(express.json());
-
-cron.schedule('*/20 * * * * *', ()=>{
-    console.log('running a task every minute');
-});
 
 mongoose.connect("mongodb://localhost/ws-gen-11-project",{
     useNewUrlParser: true,
@@ -38,6 +34,7 @@ app.use((err,req,res,next)=>{
 
 app.use('/blogposts', blogPostsRouter);
 app.use('/categories', categoriesRouter);
+app.use('/cities',citiesRouter);
 
 app.listen("3000", (error)=>{
     if(error){

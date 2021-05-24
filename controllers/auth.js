@@ -3,6 +3,7 @@ const errorResponse=require('../lib/error-response-sender');
 const User=require('../models/user');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
+const mailer = require('../lib/login-mail');
 
 module.exports={
     register:async(req,res)=>{
@@ -41,6 +42,8 @@ module.exports={
                 email:user.email
             }
 
+            mailer();
+
             const token=jwt.sign(payload,'WPWIENDOFERBFPLAS788*$',{
                 expiresIn:'30m'
             });
@@ -65,5 +68,84 @@ module.exports={
        } catch (error) {
            errorResponse(res,500,error.message)
        }
+    },
+    logout:(req,res)=>{
+        try {
+            const payload={
+                id:req.user.id,
+                email:req.user.email
+            }
+
+            const token=jwt.sign(payload,'Invalid secret key',{
+                expiresIn:'1'
+            });
+
+            successResponse(res,'You have been logged out',token);
+        } catch (error) {
+            errorResponse(res,500,error.message);
+        }
+    },
+    changePassword:async(req,res)=>{
+        try {
+            const user=await User.findOne({emai:req.body.email});
+            if(!user){
+                return errorResponse(res,403,'Forbidden');
+            }
+            if(!bcrypt.compareSync(req.body.password,user.password)){
+                return errorResponse(res,401,'Unauthorized');
+            }
+            if(req.body.new_password===req.body.confirmation_password){
+                req.body.password=req.new_password;
+            }else{
+                return errorResponse(res,400,'Passwords do not match');
+            }
+
+            req.body.password=bcrypt.hashSync(req.body.password);
+
+            const updateUser=await User.findByIdAndUpdate(user._id,req.body);
+            if(updateUser){
+                return successResponse(res,'Password is successfully changed');
+            }
+            return errorResponse(res,400,'Not Found');
+        } catch (error) {
+            errorResponse(res,500,'Internal Server Error');
+        }
+    },
+    forgotPassword:async(req,res)=>{
+        try {
+            const user=await User.findOne({email:req.body.email});
+            if(!user){
+                errorResponse(res,404,'Not Found');
+            }
+            const getLnk=await User.findByIdAndUpdate(user._id,req.body);
+            if(getLink){
+                mailer(req.user.email);
+            }
+            successResponse(res,'Email has been send, follow the instructions');
+        } catch (error) {
+            errorResponse(res,500,'Internal Server Error');
+        }
+    },
+    resetPassword:async(req,res)=>{
+        try {
+            const user=await User.findOne({email:req.body.email});
+            if(!user)
+                errorResponse(res,403,'Forbidden');
+            if(req.body.new_password===req.body.confirmation_password){
+                req.body.password=req.body.new_password;
+            }else{
+                errorResponse(res,400,'Passwords do not match')
+            }
+
+            req.body.password=bcrypt.hashSync(req.body.password);
+
+            const updateUser=await User.findByIdAndUpdate(user._id,req.body);
+            if(updateUser){
+                successResponse(res,'Password is successfully changed');
+            }else
+            return errorResponse(res,404,'Not Found');
+        } catch (error) {
+            errorResponse(res,500,'Internal Server Error');
+        }
     }
 };

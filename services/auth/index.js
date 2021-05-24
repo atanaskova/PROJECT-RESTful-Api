@@ -2,6 +2,7 @@ const express=require('express');
 const app=express();
 const mongoose=require('mongoose');
 const v1=require('./routers/v1');
+const usersRouter=require('./routers/users');
 const jwt=require('express-jwt');
 const errorResponse=require('../../lib/error-response-sender');
 
@@ -33,6 +34,7 @@ app.use((err,req,res,next)=>{
 });
 
 app.use('/api/v1/auth',v1);
+app.use('/users',usersRouter);
 
 app.listen("3002",(error)=>{
     if(error){

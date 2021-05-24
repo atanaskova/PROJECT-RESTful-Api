@@ -5,6 +5,10 @@ const controller=require('../../../controllers/auth');
 router
     .post('/register', controller.register)
     .post('/login', controller.login)
-    .get('/refreshToken', controller.refresh_token);
+    .post('/logout', controller.logout)
+    .get('/refreshToken', controller.refresh_token)
+    .post('/change-password', controller.changePassword)
+    .post('/forgot-password', controller.forgotPassword)
+    .post('/reset-password', controller.resetPassword)
 
 module.exports=router;
