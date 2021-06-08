@@ -1,5 +1,5 @@
-const successResponse=require('../lib/success-response-sender')
-const errorResponse=require('../lib/error-response-sender');
+const successResponse=require('../lib/handlers/success-response-sender')
+const errorResponse=require('../lib/handlers/error-response-sender');
 const User=require('../models/user');
 const schedule=require('node-schedule');
 
@@ -51,9 +51,11 @@ module.exports={
             try {
                 const user=await User.findById(req.params.id);
                 const currentUser=await User.findById(req.body.user);
+                
                 if(!user.followers.includes(req.body.user)){
                     await user.updateOne({$push:{followers:req.body.user}});
                     await currentUser.updateOne({$push:{following:req.params.id}});
+
                     successResponse(res,200,'User has been followed');
                 }else{
                     errorResponse(res,403,'You already follow this user');
@@ -70,9 +72,11 @@ module.exports={
             try {
                 const user=await User.findById(req.params.id);
                 const currentUser=await User.findById(req.body.user);
+
                 if(user.followers.includes(req.body.user)){
                     await user.updateOne({$pull:{followers:req.body.user}});
                     await currentUser.updateOne({$pull:{following:req.params.id}});
+
                     successResponse(res,200,'User has been unfollowed');
                 }else{
                     errorResponse(res,403,"You don't follow this user anymore");

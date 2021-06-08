@@ -4,8 +4,8 @@ const controller=require('../../../controllers/blog-posts');
 
 router
     .get('/', controller.fetchAll)
-    .post('/', controller.create)
     .get('/:id', controller.fetchOne)
+    .post('/', controller.create)
     .patch('/:id', controller.patchUpdate)
     .put('/:id', controller.putUpdate)
     .delete('/:id', controller.delete)

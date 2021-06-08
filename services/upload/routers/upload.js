@@ -1,13 +1,13 @@
 const express=require('express');
-const {upload}=require('../../../lib/fileUploadHelper');
+const {upload}=require('../../../lib/handlers/fileUploadHelper');
 const router=express.Router();
 const controller=require('../../../controllers/upload');
 
 router.post('/singleFile',upload.single('file',controller.singleFileUpload))
     .post('/multipleFiles',upload.array('files',controller.multipleFileUpload))
     .get('/getSingleFile',controller.getAllSingleFiles)
-    .get('/getMultipleFies',controller.getAllMultipleFiles)
+    .get('/getMultipleFiles',controller.getAllMultipleFiles)
     .delete('/single/:id',controller.deleteSingleFile)
-    .delete('/mutiple/:id',controller.deleteMultipleFiles)
+    .delete('/multiple/:id',controller.deleteMultipleFiles)
 
 module.exports=router

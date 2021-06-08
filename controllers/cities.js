@@ -1,6 +1,6 @@
 const City=require('../models/city');
-const successResponse=require('../lib/success-response-sender');
-const errorResponse=require('../lib/error-response-sender');
+const successResponse=require('../lib/handlers/success-response-sender');
+const errorResponse=require('../lib/handlers/error-response-sender');
 
 module.exports={
     fetchAll:async(req,res)=>{

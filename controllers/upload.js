@@ -1,7 +1,7 @@
 const SingleFile=require('../models/singleFile');
 const MultipleFile=require('../models/multipleFiles');
-const successResponse=require('../lib/success-response-sender');
-const errorResponse=require('../lib/error-response-sender');
+const successResponse=require('../lib/handlers/success-response-sender');
+const errorResponse=require('../lib/handlers/error-response-sender');
 
 module.exports={
     singleFileUpload:async(req,res,next)=>{

@@ -1,7 +1,7 @@
 const Region=require('../models/region');
-const successResponse=require('../lib/success-response-sender');
-const errorResponse=require('../lib/error-response-sender');
-const regionWeatherByCoordinates=require('../lib/region-weather-by-coordinates');
+const successResponse=require('../lib/handlers/success-response-sender');
+const errorResponse=require('../lib/handlers/error-response-sender');
+const regionWeatherByCoordinates=require('../lib/openweather/region-weather-by-coordinates');
 
 module.exports={
     fetchAll:async(req,res)=>{

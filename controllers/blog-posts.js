@@ -1,21 +1,12 @@
 const BlogPost=require('../models/blog-post');
-const successResponse=require('../lib/success-response-sender');
-const errorResponse=require('../lib/error-response-sender');
-const mailer=require('../lib/blog-post-mail');
-const axios=require('axios');
-
-const getWeatherData=async(cityName)=>{
-    const res=await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=5bff06138ed8728ca826690f30239655`)
-
-    return {
-        description:`${res.data.weather[0].main}(${res.data.weather[0].description})`,
-        temp:res.data.main.temp,
-        feels_like:res.data.main.feels_like,
-        temp_min:res.data.main.temp_min,
-        temp_max:res.data.main.temp_max
-
-    }
-}
+const successResponse=require('../lib/handlers/success-response-sender');
+const errorResponse=require('../lib/handlers/error-response-sender');
+const enrichBlogPost=require('../lib/enrichers')
+const mailer=require('../lib/mails/blog-post-mail');
+const sendMail=require('../lib/mails/mailgun');
+const createPDF=require('../lib/mails/pdf');
+const path=require('path');
+const generateEmailData=require('../lib/mails/emailData');
 
 module.exports={
     fetchAll: async(req,res)=>{
@@ -38,14 +29,9 @@ module.exports={
             .populate('user',['full_name', 'email'])
             .populate('city','name')
 
-            blogPost=blogPost.toObject();
-            blogPost.city={
-                ...blogPost.city,
-                weather:await getWeatherData(blogPost.city.name)
-            }
             if(!blogPost) errorResponse(res, 400, 'No blog post with the provided id')
 
-            successResponse(res, `Post with id #${req.params.id}`, blogPost);
+            successResponse(res, `Post with id #${req.params.id}`, await enrichBlogPost(blogPost));
 
         }catch (error){
             errorResponse(res,500,error.message)
@@ -56,8 +42,17 @@ module.exports={
             const blogPost=await BlogPost.create(req.body);
 
            if(blogPost) {
-               mailer();
+            mailer();
            }
+
+        //    The Callback Way
+        //    createPDF(blogPost,()=>{
+        //        sendMail(generateEmailData(blogPost,req.user.email));
+        //    });
+
+           //The Promised Land
+           await createPDF(blogPost);
+           sendMail(generateEmailData(blogPost,req.user.email));
                            
             successResponse(res, 'New blog post created', blogPost);
             

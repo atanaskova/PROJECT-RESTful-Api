@@ -9,8 +9,9 @@
     "upload": "nodemon services/upload",
     "auth": "nodemon services/auth",
     "download": "nodemon services/download",
-    "weather":"nodemon services/weather",
-    "all": "npm-run-all --parallel blog upload auth download weather"
+    "weather": "nodemon services/weather",
+    "proxy": "nodemon services/proxy",
+    "all": "npm-run-all --parallel blog upload auth download weather proxy"
   },
   "keywords": [],
   "author": "",
@@ -18,16 +19,20 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-http-proxy": "^1.6.2",
     "express-jwt": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
+    "mailgun-js": "^0.6.7",
     "mongoose": "^5.12.5",
     "multer": "^1.4.2",
     "node-cron": "^3.0.0",
     "node-schedule": "^2.0.0",
     "nodemailer": "^6.6.0",
     "nodemailer-handlebars": "^1.0.1",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "pdfkit": "^0.12.1"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"

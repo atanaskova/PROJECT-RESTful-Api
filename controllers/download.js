@@ -1,8 +1,8 @@
 const https=require('https');
 const fs=require('fs');
 const path=require('path');
-const successResponse=require('../lib/success-response-sender');
-const errorResponse=require('../lib/error-response-sender');
+const successResponse=require('../lib/handlers/success-response-sender');
+const errorResponse=require('../lib/handlers/error-response-sender');
 
 module.exports={
     downloadFile:(req,res)=>{

@@ -1,9 +1,11 @@
-const successResponse=require('../lib/success-response-sender');
-const errorResponse=require('../lib/error-response-sender');
+const successResponse=require('../lib/handlers/success-response-sender');
+const errorResponse=require('../lib/handlers/error-response-sender');
 const User=require('../models/user');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
-const mailer = require('../lib/login-mail');
+const logInMailer = require('../lib/mails/login-mail');
+const resetMailer=require('../lib/mails/reset-mail');
+require('dotenv').config();
 
 module.exports={
     register:async(req,res)=>{
@@ -20,6 +22,7 @@ module.exports={
             req.body.password=bcrypt.hashSync(req.body.password);
 
             await User.create(req.body);
+
             successResponse(res,'User registered');
         } catch (error) {
             errorResponse(res,500,error.message);
@@ -42,9 +45,9 @@ module.exports={
                 email:user.email
             }
 
-            mailer();
+            logInMailer();
 
-            const token=jwt.sign(payload,'WPWIENDOFERBFPLAS788*$',{
+            const token=jwt.sign(payload,process.env.SECRET_AUTH_KEY,{
                 expiresIn:'30m'
             });
 
@@ -60,7 +63,7 @@ module.exports={
             id: req.user.id,
             email: req.user.email
         }
-        const token=jwt.sign(payload,'WPWIENDOFERBFPLAS788',{
+        const token=jwt.sign(payload,process.env.SECRET_AUTH_KEY,{
             expiresIn:'30m'
         });
            
@@ -119,7 +122,7 @@ module.exports={
             }
             const getLnk=await User.findByIdAndUpdate(user._id,req.body);
             if(getLink){
-                mailer(req.user.email);
+                resetMailer(req.user.email);
             }
             successResponse(res,'Email has been send, follow the instructions');
         } catch (error) {

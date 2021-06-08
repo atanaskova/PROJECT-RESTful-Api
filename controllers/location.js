@@ -1,8 +1,8 @@
 const Location=require('../models/location');
-const successResponse=require('../lib/success-response-sender');
-const errorResponse=require('../lib/error-response-sender');
-const locationPollutionByCoordinates=require('../lib/location-pollution-by-coordinates');
-const locationWeatherByCoordinates=require('../lib/location-weather-by-coordinates');
+const successResponse=require('../lib/handlers/success-response-sender');
+const errorResponse=require('../lib/handlers/error-response-sender');
+const locationPollutionByCoordinates=require('../lib/openweather/location-pollution-by-coordinates');
+const locationWeatherByCoordinates=require('../lib/openweather/location-weather-by-coordinates');
 
 module.exports={
     fetchAll:async(req,res)=>{

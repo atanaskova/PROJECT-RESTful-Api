@@ -4,8 +4,8 @@ const categoriesController=require('../../../controllers/categories')
 
 router
     .get('/',categoriesController.fetchAll)
-    .post('/',categoriesController.create)
     .get('/:id',categoriesController.fetchOne)
+    .post('/',categoriesController.create)
     .put('/:id',categoriesController.putUpdate)
     .patch('/:id',categoriesController.patchUpdate)
     .delete('/:id',categoriesController.delete)
